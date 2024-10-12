@@ -1,0 +1,348 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API для кинотеатра \"Искорка\"",
+    "description": "Домашнее задание по тему \"Swagger ч2\"",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/HIKARUMAZUMOTO_1/cinemaAPI/2.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    },
+    {
+      "url": "https://virtserver.swaggerhub.com/HIKARUMAZUMOTO_1/cinemaAPI/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/TimeMovie": {
+      "get": {
+        "summary": "инфо о наличии свободных мест на сеанс",
+        "description": "по id сеанса показывает инфо о свободных местах",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "идентификатор сеанса",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "изменяет время сеанса в расписании",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimeMovie_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Booking": {
+      "get": {
+        "summary": "возвращает данные из booking с указанием бонусных карт и оплате бонусными баллами",
+        "description": "предоставляет ежемесячный отчет (как часто клиенты используют бонусную карту при бронировании, какую часть стоимости билетов (%) клиенты оплачивают бонусными баллами)",
+        "parameters": [
+          {
+            "name": "bonusCard",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "добавляет в систему инфо о бронировании, инфо о начислении и трате бонусов",
+        "description": "Если клиент указывает при бронировании номер карты, то 10% стоимости бронирования зачисляется на карту в виде бонусных баллов (1 балл = 1 рубль). Баллы начисляются автоматически сразу после оплаты брони. При бронировании клиент может оплачивать до 50% стоимости билетов бонусными баллами.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "удаляет запись о бронировании",
+        "description": "удаляет запись о бронировании по указанному id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/BonusCard": {
+      "post": {
+        "summary": "добавляет инфо о бонусной карте",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BonusCard_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "totalCount": {
+                "type": "integer"
+              }
+            }
+          },
+          "sessions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "freeSeats": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "TimeMovie_body": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "dateTime": {
+            "type": "string",
+            "format": "dateTime"
+          }
+        }
+      },
+      "inline_response_200_1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "costTickets": {
+            "type": "number"
+          },
+          "payBonus": {
+            "type": "integer"
+          }
+        }
+      },
+      "Booking_body": {
+        "type": "object",
+        "properties": {
+          "movieId": {
+            "type": "integer"
+          },
+          "seatNumber": {
+            "type": "string"
+          },
+          "buyer": {
+            "type": "string"
+          },
+          "bonusCard": {
+            "type": "integer",
+            "default": 0
+          },
+          "payBonus": {
+            "type": "integer",
+            "default": 0
+          }
+        }
+      },
+      "inline_response_500": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "plusBonus": {
+            "type": "integer"
+          }
+        }
+      },
+      "BonusCard_body": {
+        "type": "object",
+        "properties": {
+          "cardowner": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
